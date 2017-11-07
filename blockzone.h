@@ -10,6 +10,7 @@ public:
     int rows,columns;
     block*** block_mat;
     blockzone(QGraphicsScene*);
+    bool checkCollision(int,int);
 };
 
 #endif // BLOCKZONE_H

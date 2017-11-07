@@ -18,11 +18,14 @@ ball::ball(QGraphicsScene* scene,QGraphicsRectItem* ppad, blockzone* pzone)
 void ball::checkCollision()
 {
     if(x() < 0 || x()+BALL_WIDTH > SCREEN_WIDTH)xspd = -xspd;
-    if(y() < 0)yspd = -yspd;
     if(y()+BALL_HEIGHT >= SCREEN_HEIGHT-PADDLE_HEIGHT){
         if(y()+BALL_HEIGHT > SCREEN_HEIGHT)setPos(SCREEN_WIDTH/2,SCREEN_HEIGHT/2);
         else if(x() > pad->x() && x() < pad->x() + PADDLE_WIDTH)yspd = -1;
     }
+    if(y() < BLOCK_ZONE_Y + ROWS * BLOCK_HEIGHT){
+        if(y() < 0 || zone->checkCollision(x(),y()))yspd = -yspd;
+    }
+
 }
 
 void ball::move()
