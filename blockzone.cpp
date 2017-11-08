@@ -1,10 +1,18 @@
 #include "blockzone.h"
 #include "globals.h"
-#include <stdio.h>
+
+#include <sstream>
+
+std::string NumberToString ( int Number )
+{
+    std::ostringstream ss;
+    ss << Number;
+    return ss.str();
+}
 
 blockzone::blockzone(QGraphicsScene* scene)
 {
-
+    this->scene = scene;
     block_mat = (block***)malloc(sizeof(block**)*ROWS);
     for(int i = 0; i< ROWS; i++){
         block_mat[i] = (block**)malloc(sizeof(block*)*ROWS);
@@ -21,11 +29,19 @@ blockzone::blockzone(QGraphicsScene* scene)
 
 bool blockzone::checkCollision(int x, int y)
 {
-    if(x > BLOCK_ZONE_X + COLUMNS * BLOCK_WIDTH || x < BLOCK_ZONE_X || y < BLOCK_ZONE_Y)return false;
-    int i = (ROWS - 1) - (((BLOCK_ZONE_Y + ROWS * BLOCK_HEIGHT) - x)%(BLOCK_HEIGHT));
-    int j = (COLUMNS - 1) - (((BLOCK_ZONE_X + COLUMNS * BLOCK_WIDTH) - x)%(BLOCK_WIDTH));
-    printf ("I: %d J: %d \n", i, j);
-    if(block_mat[i][j]!=NULL)return true;
+
+    if(y > BLOCK_ZONE_Y + ROWS * BLOCK_HEIGHT || y + BALL_HEIGHT < BLOCK_ZONE_Y || x > BLOCK_ZONE_X + COLUMNS * BLOCK_WIDTH || x + BALL_WIDTH < BLOCK_ZONE_X)return false;
+    int i = (y + BALL_HEIGHT/2 - BLOCK_ZONE_Y)/(BLOCK_HEIGHT);
+    int j = (x + BALL_WIDTH/2 - BLOCK_ZONE_X)/(BLOCK_WIDTH);
+    //qDebug() << NumberToString(x + BALL_WIDTH/2 - BLOCK_ZONE_X).c_str() << " " << NumberToString(y + BALL_HEIGHT/2 - BLOCK_ZONE_Y).c_str();
+    if(i>=ROWS || j>=COLUMNS || i<0 || j<0)return false;
+
+
+    if(block_mat[i][j]!=NULL){
+        delete block_mat[i][j];
+        block_mat[i][j] = NULL;
+        return true;
+    }
     return false;
 }
 

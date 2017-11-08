@@ -26,3 +26,5 @@ HEADERS  += \
     blockzone.h
 
 FORMS    +=
+
+CONFIG += c++11
